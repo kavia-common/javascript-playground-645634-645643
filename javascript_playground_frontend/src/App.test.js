@@ -1,8 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders Hello World heading', () => {
+test('renders Editor pane title', () => {
   render(<App />);
-  const heading = screen.getByRole('heading', { name: /hello world/i });
-  expect(heading).toBeInTheDocument();
+  const editorTitle = screen.getByText(/editor/i);
+  expect(editorTitle).toBeInTheDocument();
+});
+
+test('renders a code editor textarea', () => {
+  render(<App />);
+  const textarea = screen.getByLabelText(/javascript code editor/i);
+  expect(textarea).toBeInTheDocument();
 });

@@ -4,12 +4,19 @@ import './App.css';
 /**
  * PUBLIC_INTERFACE
  * App is the landing view of the JavaScript Playground frontend.
- * It renders a very simple, themed "Hello World" welcome screen using modern React best practices.
- * - Provides a light/dark theme toggle that respects the existing CSS variables and transitions.
- * - Serves as the initial UI, ready to be extended with playground features.
+ * It now renders a modern, light-themed split layout with an editable JavaScript
+ * code interface on the left and a placeholder output pane on the right.
+ * This version focuses only on editable input (no execution yet).
  */
 function App() {
   const [theme, setTheme] = useState('light');
+  const [code, setCode] = useState(`// Welcome to the JavaScript Playground!
+// Start typing your JavaScript here...
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+
+console.log(greet('World'));`);
 
   // Apply theme to the document element for CSS variable scoping.
   useEffect(() => {
@@ -23,25 +30,51 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header" role="banner">
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-
-        <h1 className="title" style={{ margin: 0 }}>Hello World</h1>
-        <p className="subtitle" style={{ marginTop: 12, opacity: 0.9 }}>
-          Welcome to the JavaScript Playground
-        </p>
-        <p className="description" style={{ marginTop: 24, maxWidth: 560, lineHeight: 1.5 }}>
-          This is a minimal landing screen. Use the theme toggle to switch between light and dark modes.
-          The interface is ready to evolve into a live code playground with an editor and output panel.
-        </p>
+      {/* Top Navigation Bar */}
+      <header className="navbar" role="banner" aria-label="Top Navigation">
+        <div className="nav-left">
+          <span className="brand">JS Playground</span>
+        </div>
+        <div className="nav-right">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+          </button>
+        </div>
       </header>
+
+      {/* Split Layout */}
+      <main className="workspace" role="main">
+        <section className="pane editor-pane" aria-label="Code editor">
+          <div className="pane-header">
+            <span className="pane-title">Editor</span>
+          </div>
+          {/* PUBLIC_INTERFACE */}
+          <textarea
+            className="code-editor"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            spellCheck="false"
+            aria-label="JavaScript code editor"
+            placeholder="// Type your JS code here"
+          />
+        </section>
+
+        <section className="pane output-pane" aria-label="Output preview">
+          <div className="pane-header">
+            <span className="pane-title">Output</span>
+          </div>
+          <div className="output-placeholder">
+            <p className="description">
+              Code execution output will appear here in a future step.
+            </p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
